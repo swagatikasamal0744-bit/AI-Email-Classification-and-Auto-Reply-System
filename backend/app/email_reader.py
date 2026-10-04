@@ -58,7 +58,7 @@ def fetch_unread_imap_emails(limit: int = 10) -> List[Dict[str, Any]]:
         mail.login(IMAP_USERNAME, IMAP_PASSWORD)
         mail.select("INBOX")
 
-        status, response = mail.search(None, "UNSEEN")
+        status, response = mail.search(None, "ALL")
         if status != "OK":
             return []
 

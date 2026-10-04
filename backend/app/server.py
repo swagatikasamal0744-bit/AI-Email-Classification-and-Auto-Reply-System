@@ -299,8 +299,8 @@ INITIAL_LOGS = [
 
 
 def load_initial_stores():
-    emails = list(INITIAL_EMAILS)
-    logs = list(INITIAL_LOGS)
+    emails = []
+    logs = []
     audit_file = LOGS_DIR / "audit.jsonl"
     if audit_file.exists():
         try:
@@ -680,11 +680,7 @@ def run_ingestion(user: Dict[str, Any] = Depends(require_auth)):
         print(f"[Ingest] IMAP fetch exception: {e}")
 
     # Fallback to test dataset if no unread inbox messages found
-    if not raw_emails:
-        sample_file = BASE_DIR / "tests" / "sample_emails.json"
-        if sample_file.exists():
-            source = "sample_emails"
-            raw_emails = read_emails_from_json(sample_file)[:3]
+
 
     if not raw_emails:
         return {
