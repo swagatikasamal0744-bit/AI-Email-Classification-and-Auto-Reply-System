@@ -95,9 +95,12 @@ def fetch_unread_imap_emails(limit: int = 10) -> List[Dict[str, Any]]:
                 "body": body,
                 "received_at": date_str,
             })
-mail.store(e_id, '+FLAGS', '\\Seen')
-        mail.close()
-        mail.logout()
+
+            mail.store(e_id, '+FLAGS', '\\Seen')
+
+        
+    mail.close()
+    mail.logout()            
     except Exception as e:
         print(f"[EmailReader] Error reading IMAP emails: {e}")
 
