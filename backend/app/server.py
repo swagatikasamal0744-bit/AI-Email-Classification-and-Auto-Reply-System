@@ -480,8 +480,8 @@ def login(creds: LoginRequest, response: Response):
         value=token,
         httponly=True,
         max_age=SESSION_TTL_SECONDS,
-        samesite="lax",
-        secure=False,  # Set to False for local dev over HTTP
+        samesite="none",
+        secure=True,  # Set to False for local dev over HTTP
         path="/"
     )
 
