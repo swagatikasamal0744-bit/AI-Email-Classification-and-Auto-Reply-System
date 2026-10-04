@@ -58,7 +58,7 @@ export function Header({ setMobileOpen }) {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-extrabold text-slate-100 tracking-tight">
-                Good Evening {user?.name} <span className="text-amber-300">✨</span>
+                {user?.name} <span className="text-amber-300"></span>
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-slate-400 font-medium">
