@@ -53,6 +53,7 @@ def fetch_unread_imap_emails(limit: int = 10) -> List[Dict[str, Any]]:
         return []
 
     emails = []
+
     try:
         mail = imaplib.IMAP4_SSL(IMAP_SERVER, IMAP_PORT)
         mail.login(IMAP_USERNAME, IMAP_PASSWORD)
@@ -60,10 +61,12 @@ def fetch_unread_imap_emails(limit: int = 10) -> List[Dict[str, Any]]:
 
         status, response = mail.search(None, "UNSEEN")
         if status != "OK":
+            mail.close()
+            mail.logout()
             return []
 
         email_ids = response[0].split()
-        target_ids = email_ids[-limit:]  # Get latest unread up to limit
+        target_ids = email_ids[-limit:]
 
         for e_id in target_ids:
             status, data = mail.fetch(e_id, "(RFC822)")
@@ -75,10 +78,10 @@ def fetch_unread_imap_emails(limit: int = 10) -> List[Dict[str, Any]]:
 
             subject = _decode_mime_header(msg.get("Subject", "No Subject"))
             from_header = _decode_mime_header(msg.get("From", ""))
-            
-            # Simple sender and sender_name extraction
+
             sender = from_header
             sender_name = ""
+
             if "<" in from_header and ">" in from_header:
                 parts = from_header.split("<")
                 sender_name = parts[0].strip().strip('"').strip("'")
@@ -96,17 +99,16 @@ def fetch_unread_imap_emails(limit: int = 10) -> List[Dict[str, Any]]:
                 "received_at": date_str,
             })
 
+            # Mark the email as read so it is not ingested again
             mail.store(e_id, '+FLAGS', '\\Seen')
 
-        
-    mail.close()
-    mail.logout()            
+        mail.close()
+        mail.logout()
+
     except Exception as e:
         print(f"[EmailReader] Error reading IMAP emails: {e}")
 
     return emails
-
-
 def read_emails_from_json(file_path: Path | str) -> List[Dict[str, Any]]:
     """
     Reads mock/sample emails from a local JSON file.
