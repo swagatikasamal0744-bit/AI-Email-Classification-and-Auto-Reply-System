@@ -3,7 +3,10 @@
  * Centralized communication layer connecting React frontend to Python FastAPI backend.
  * Uses HTTP-only secure session cookies and clean error translation.
  */
-
+const API_BASE_URL = (
+  import.meta.env.VITE_API_URL ||
+  'https://ai-email-backend-z0qk.onrender.com'
+).replace(/\/$/, '');
 class ApiService {
   /**
    * Universal fetch helper ensuring credentials: 'include' for session cookies
@@ -18,7 +21,8 @@ class ApiService {
 
     let res;
     try {
-      res = await fetch(url, {
+      res = await fetch(`${API_BASE_URL}${url}`, {
+
         ...options,
         headers: defaultHeaders,
         credentials: 'include', // Sends HTTP-only session cookie with every request
